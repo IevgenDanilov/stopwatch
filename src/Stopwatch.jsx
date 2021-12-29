@@ -1,0 +1,84 @@
+import styles from "./Stopwatch.module.scss";
+import React, { useState, useEffect } from "react";
+// import { timer, interval, Observable, fromEvent } from "rxjs";
+// import { takeUntil } from "rxjs/operators";
+
+const Stopwatch = () => {
+  const [active, setActive] = useState(false);
+  const [hour, setHour] = useState(0);
+  const [min, setMin] = useState(0);
+  const [sec, setSec] = useState(0);
+  const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(new Date().getTime());
+
+  const startHandler = () => {
+    const startDate = new Date().getTime() - time;
+    setStartTime(startDate);
+    setActive(true);
+  };
+
+  useEffect(() => {
+    if (active === true) {
+      const start = () => {
+        const timeDif = new Date().getTime() - startTime;
+        setTime(timeDif);
+      };
+      const timer = setTimeout(start, 1000);
+
+      const secs = Math.floor((time / 1000) % 60);
+      const mins = Math.floor(((time / 1000 - secs) % 360) / 60);
+      const hours = Math.floor(((time / 1000 - secs) / 60 - mins) / 60);
+      setHour(hours);
+      setMin(mins);
+      setSec(secs);
+    }
+  });
+
+  const stopHandler = () => {
+    ResetHandler();
+    setActive(false);
+  };
+
+  const waitHandler = () => {
+    const startDate = new Date().getTime() - time;
+    setStartTime(startDate);
+    setActive(false);
+  };
+
+  const ResetHandler = () => {
+    const reset = () => {
+      setHour(0);
+      setMin(0);
+      setSec(0);
+      setTime(0);
+      setStartTime(new Date().getTime());
+    };
+    setTimeout(reset, 1000);
+  };
+
+  return (
+    <div>
+      <div className={styles.buttons_wrapper}>
+        <button type="button" onClick={startHandler} disabled={active}>
+          Start
+        </button>
+        <button type="button" onClick={stopHandler}>
+          Stop
+        </button>
+        <button type="button" onClick={waitHandler}>
+          Wait
+        </button>
+        <button type="button" onClick={ResetHandler}>
+          Reset
+        </button>
+      </div>
+      <div className={styles.time_wrapper}>
+        <span>{(hour < 10 ? "0" : "") + hour}</span>
+        <span>{(min < 10 ? ": 0" : ": ") + min}</span>
+        <span>{(sec < 10 ? ": 0" : ": ") + sec}</span>
+      </div>
+    </div>
+  );
+};
+
+export default Stopwatch;
