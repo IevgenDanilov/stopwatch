@@ -1,41 +1,42 @@
 import styles from "./Stopwatch.module.scss";
 import React, { useState, useEffect } from "react";
-// import { timer, interval, Observable, fromEvent } from "rxjs";
-// import { takeUntil } from "rxjs/operators";
 
 const Stopwatch = () => {
   const [active, setActive] = useState(false);
+  const [tik, setTik] = useState(0);
+  const [time, setTime] = useState(0);
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
-  const [time, setTime] = useState(0);
   const [startTime, setStartTime] = useState(new Date().getTime());
 
+  useEffect(() => {
+    if (active) {
+      const endTime = new Date().getTime() - startTime;
+      setTime(endTime);
+
+      const start = () => {
+        setTik(tik + 1);
+      };
+      setTimeout(start, 1000);
+    }
+
+    const secs = Math.floor((time / 1000) % 60);
+    const mins = Math.floor(((time / 1000 - secs) % 360) / 60);
+    const hours = Math.floor(((time / 1000 - secs) / 60 - mins) / 60);
+    setHour(hours);
+    setMin(mins);
+    setSec(secs);
+  }, [tik, active]);
+
   const startHandler = () => {
+    setActive(true);
     const startDate = new Date().getTime() - time;
     setStartTime(startDate);
-    setActive(true);
   };
 
-  useEffect(() => {
-    if (active === true) {
-      const start = () => {
-        const timeDif = new Date().getTime() - startTime;
-        setTime(timeDif);
-      };
-      const timer = setTimeout(start, 1000);
-
-      const secs = Math.floor((time / 1000) % 60);
-      const mins = Math.floor(((time / 1000 - secs) % 360) / 60);
-      const hours = Math.floor(((time / 1000 - secs) / 60 - mins) / 60);
-      setHour(hours);
-      setMin(mins);
-      setSec(secs);
-    }
-  });
-
   const stopHandler = () => {
-    ResetHandler();
+    resetHandler();
     setActive(false);
   };
 
@@ -45,15 +46,14 @@ const Stopwatch = () => {
     setActive(false);
   };
 
-  const ResetHandler = () => {
-    const reset = () => {
-      setHour(0);
-      setMin(0);
-      setSec(0);
-      setTime(0);
-      setStartTime(new Date().getTime());
-    };
-    setTimeout(reset, 1000);
+  const resetHandler = () => {
+    setHour(0);
+    setMin(0);
+    setSec(0);
+    setTime(0);
+    setTik(0);
+    setStartTime(new Date().getTime());
+    setActive(true);
   };
 
   return (
@@ -68,7 +68,7 @@ const Stopwatch = () => {
         <button type="button" onClick={waitHandler}>
           Wait
         </button>
-        <button type="button" onClick={ResetHandler}>
+        <button type="button" onClick={resetHandler}>
           Reset
         </button>
       </div>
