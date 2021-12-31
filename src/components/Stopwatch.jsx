@@ -19,19 +19,18 @@ const Stopwatch = () => {
         setTik(tik + 1);
       };
       setTimeout(start, 1000);
+      const secs = Math.floor((time / 1000) % 60);
+      const mins = Math.floor(((time / 1000 - secs) % 360) / 60);
+      const hours = Math.floor(((time / 1000 - secs) / 60 - mins) / 60);
+      setHour(hours);
+      setMin(mins);
+      setSec(secs);
     }
-
-    const secs = Math.floor((time / 1000) % 60);
-    const mins = Math.floor(((time / 1000 - secs) % 360) / 60);
-    const hours = Math.floor(((time / 1000 - secs) / 60 - mins) / 60);
-    setHour(hours);
-    setMin(mins);
-    setSec(secs);
   }, [tik, active]);
 
   const startHandler = () => {
     setActive(true);
-    const startDate = new Date().getTime() - time;
+    const startDate = new Date().getTime() - time - 1000;
     setStartTime(startDate);
   };
 
@@ -41,7 +40,7 @@ const Stopwatch = () => {
   };
 
   const waitHandler = () => {
-    const startDate = new Date().getTime() - time;
+    const startDate = new Date().getTime() - time - 1000;
     setStartTime(startDate);
     setActive(false);
   };
@@ -62,10 +61,10 @@ const Stopwatch = () => {
         <button type="button" onClick={startHandler} disabled={active}>
           Start
         </button>
-        <button type="button" onClick={stopHandler}>
+        <button type="button" onClick={stopHandler} disabled={!tik || !time}>
           Stop
         </button>
-        <button type="button" onClick={waitHandler}>
+        <button type="button" onClick={waitHandler} disabled={!active || !tik}>
           Wait
         </button>
         <button type="button" onClick={resetHandler}>
