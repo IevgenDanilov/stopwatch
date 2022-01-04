@@ -1,5 +1,5 @@
-import styles from "./Stopwatch.module.scss";
 import React, { useState, useEffect } from "react";
+import styles from "./Stopwatch.module.scss";
 
 const Stopwatch = () => {
   const [active, setActive] = useState(false);
@@ -72,9 +72,11 @@ const Stopwatch = () => {
         </button>
       </div>
       <div className={styles.time_wrapper}>
-        <span>{(hour < 10 ? "0" : "") + hour}</span>
-        <span>{(min < 10 ? ": 0" : ": ") + min}</span>
-        <span>{(sec < 10 ? ": 0" : ": ") + sec}</span>
+        <span>
+          {(hour < 10 ? "0" : "") + hour}
+          {(min < 10 ? ":0" : ":") + min}
+          {(sec < 10 ? ":0" : ":") + sec}
+        </span>
       </div>
     </div>
   );
