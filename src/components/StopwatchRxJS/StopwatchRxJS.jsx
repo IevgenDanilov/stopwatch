@@ -35,7 +35,7 @@ const StopwatchRxJS = () => {
   };
 
   const waitHandler = () => {
-    const mouse$ = fromEvent(document, "click");
+    const mouse$ = fromEvent(document.querySelector("#wait"), "click");
     const buff$ = mouse$.pipe(debounceTime(300));
     const click$ = mouse$.pipe(
       buffer(buff$),
